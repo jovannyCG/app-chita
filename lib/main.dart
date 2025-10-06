@@ -1,4 +1,5 @@
 import 'package:chita_app/screens/home.dart';
+import 'package:chita_app/screens/profile.dart';
 import 'package:chita_app/screens/route.dart';
 import 'package:flutter/material.dart';
 
@@ -68,8 +69,8 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const RoutesScreen(),
     const Center(child: Text('Contactos')), // Placeholder
-    const Center(child: Text('Alertas')),   // Placeholder
-    const Center(child: Text('Perfil')),    // Placeholder
+    const Center(child: Text('Alertas')),   // Placeholder  
+    const ProfileScreen(),  // Placeholder
   ];
 
   void _onItemTapped(int index) {
