@@ -1,5 +1,7 @@
-import 'package:chita_app/main.dart';
+import 'package:chita_app/screens/map_detail.dart';
 import 'package:flutter/material.dart';
+import '../main.dart'; // Importamos para usar los colores
+
 
 class RoutesScreen extends StatelessWidget {
   const RoutesScreen({super.key});
@@ -24,16 +26,22 @@ class RoutesScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                // --- 2. MODIFICA ESTAS TARJETAS ---
                 _RouteCard(
                   imagePath: 'assets/parque_la_encantada.jpg',
                   title: 'Parque La Encantada',
                   distance: '1.2 km',
+                  mapImagePath: 'assets/map.png', // Pasa la imagen del mapa
+                  coordinates: 'Coordenadas: 22.7709, -102.5832',
                 ),
                 const SizedBox(height: 20),
                 _RouteCard(
                   imagePath: 'assets/parque_sierra_de_alica.jpg',
                   title: 'Parque Sierra de Álica',
                   distance: '2.5 km',
+                   // Puedes usar el mismo mapa como ejemplo o agregar otro
+                  mapImagePath: 'assets/map.png',
+                  coordinates: 'Coordenadas: 22.7625, -102.5855',
                 ),
               ],
             ),
@@ -60,18 +68,23 @@ class _RouteCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String distance;
+  // --- 3. AÑADE ESTOS PARÁMETROS ---
+  final String mapImagePath;
+  final String coordinates;
 
   const _RouteCard({
     required this.imagePath,
     required this.title,
     required this.distance,
+    required this.mapImagePath,
+    required this.coordinates,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: cardColor,
-      clipBehavior: Clip.antiAlias, // Para que la imagen respete los bordes redondeados
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -104,8 +117,20 @@ class _RouteCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
+                  // --- 4. ACTUALIZA EL BOTÓN ---
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MapDetailScreen(
+                            routeTitle: title,
+                            routeCoordinates: coordinates,
+                            mapImagePath: mapImagePath,
+                          ),
+                        ),
+                      );
+                    },
                     child: const Text('Ver en Mapa'),
                   ),
                 ),

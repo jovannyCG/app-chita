@@ -1,3 +1,4 @@
+import 'package:chita_app/screens/alert.dart';
 import 'package:chita_app/screens/home.dart';
 import 'package:chita_app/screens/profile.dart';
 import 'package:chita_app/screens/route.dart';
@@ -69,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const RoutesScreen(),
     const Center(child: Text('Contactos')), // Placeholder
-    const Center(child: Text('Alertas')),   // Placeholder  
+    const AlertsScreen(),   
     const ProfileScreen(),  // Placeholder
   ];
 
