@@ -30,7 +30,7 @@ class ContactsScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min, // Para que la columna no ocupe todo el espacio
                     children: [
                       Icon(
-                        Icons.person_add_alt_1_outlined,
+                        Icons.phone_in_talk,
                         color: Colors.grey[600],
                         size: 50,
                       ),
