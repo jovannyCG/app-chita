@@ -1,4 +1,5 @@
 import 'package:chita_app/screens/alert.dart';
+import 'package:chita_app/screens/contacts.dart';
 import 'package:chita_app/screens/home.dart';
 import 'package:chita_app/screens/profile.dart';
 import 'package:chita_app/screens/route.dart';
@@ -69,9 +70,9 @@ class _MainScreenState extends State<MainScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const RoutesScreen(),
-    const Center(child: Text('Contactos')), // Placeholder
-    const AlertsScreen(),   
-    const ProfileScreen(),  // Placeholder
+    const ContactsScreen(),
+    const AlertsScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
