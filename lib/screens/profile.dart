@@ -3,6 +3,7 @@ import '../main.dart'; // Importamos para usar los colores globales
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+  
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -11,6 +12,60 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   // Estado para el switch de notificaciones
   bool _notificationsEnabled = true;
+  void showSosConfirmationDeleteAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: cardColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            '¿Eliminar cuenta?',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Esto acción es permanente y no se puede deshacer. perderás todos tus datos, conactos y configuración.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey, fontSize: 14),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: accentColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Enviar Alerta'),
+                  onPressed: () {
+                    // Aquí iría la lógica para enviar la alerta
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               text: 'Eliminar Cuenta',
               icon: Icons.delete_outline,
               textColor: accentColor, // Color rojo para acción destructiva
-              onTap: () {},
+              onTap: () => showSosConfirmationDeleteAccountDialog(context),
             ),
              const SizedBox(height: 20),
           ],

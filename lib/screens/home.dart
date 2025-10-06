@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: cardColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text(
-            '¿Enviar Alerta de Emergencia?',
+            '¿Enviar alerta de Emergencia?',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
