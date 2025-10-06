@@ -1,3 +1,4 @@
+import 'package:chita_app/screens/share_location.dart';
 import 'package:flutter/material.dart';
 import '../main.dart'; // Importamos para usar los colores
 
@@ -122,26 +123,33 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
                 childAspectRatio: 1.3,
-                children: const [
-                  _FeatureCard(
+                children: [
+                  const _FeatureCard(
                     icon: Icons.route,
                     title: 'Mis Rutas',
                     subtitle: 'Ver rutas guardadas',
                   ),
-                  _FeatureCard(
+                  const _FeatureCard(
                     icon: Icons.people_outline,
                     title: 'Contactos',
                     subtitle: 'Contactos de emergencia',
                   ),
-                  _FeatureCard(
+                  const _FeatureCard(
                     icon: Icons.notifications_none,
                     title: 'Alertas',
                     subtitle: 'Actividad reciente',
                   ),
+                  // --- MODIFICACIÓN AQUÍ ---
                   _FeatureCard(
                     icon: Icons.share_location,
                     title: 'Compartir Ubicación',
-                    subtitle: '', // Subtítulo vacío para ajustarse al diseño
+                    subtitle: '',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ShareLocationScreen()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -158,36 +166,41 @@ class _FeatureCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap; // <-- AÑADE onTap
 
   const _FeatureCard({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap, // <-- AÑADE onTap
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: primaryColor, size: 30),
-          const SizedBox(height: 15),
-          Text(title,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16)),
-          if (subtitle.isNotEmpty)
-            Text(subtitle,
-                style: const TextStyle(color: Colors.grey, fontSize: 12)),
-        ],
+    return GestureDetector( // <-- ENVUELVE CON GestureDetector
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: primaryColor, size: 30),
+            const SizedBox(height: 15),
+            Text(title,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
+            if (subtitle.isNotEmpty)
+              Text(subtitle,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
