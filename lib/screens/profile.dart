@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           content: const Text(
-            'Esto acción es permanente y no se puede deshacer. perderás todos tus datos, conactos y configuración.',
+            'Esta acción es permanente y no se puede deshacer. Perderás todos tus datos, contactos y configuración.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
@@ -53,9 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text('Enviar Alerta'),
+                  child: const Text('Eliminar Cuenta'),
                   onPressed: () {
-                    // Aquí iría la lógica para enviar la alerta
+                    // Aquí iría la lógica para eliminar la cuenta
                     Navigator.of(context).pop();
                   },
                 ),
@@ -94,57 +94,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // --- SECCIÓN: INFORMACIÓN PERSONAL ---
             const _SectionTitle(title: 'Información Personal'),
             const SizedBox(height: 16),
-            const _CustomTextField(
-              labelText: 'Nombre Completo',
-              hintText: 'Ingresa tu nombre',
+            const _InfoTile(
+              label: 'Nombre Completo',
+              value: 'Juan Pérez',
             ),
             const SizedBox(height: 16),
-            const _CustomTextField(
-              labelText: 'Email',
-              initialValue: 'usuario@chita.app',
-              enabled: false, // El email no se puede editar
+            const _InfoTile(
+              label: 'Email',
+              value: 'usuario@chita.app',
             ),
             const SizedBox(height: 16),
-            const _CustomTextField(
-              labelText: 'Número de Teléfono',
-              hintText: 'Ingresa tu número de teléfono',
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Guardar Cambios'),
+            const _InfoTile(
+              label: 'Número de Teléfono',
+              value: '+1 234 567 8900',
             ),
             const SizedBox(height: 30),
 
-            // --- SECCIÓN: CONFIGURACIÓN ---
-            const _SectionTitle(title: 'Configuración'),
-            const SizedBox(height: 8),
-            _SettingsTile(
-              title: 'Notificaciones Push',
-              subtitle: 'Recibir alertas y actualizaciones',
-              trailing: Switch(
-                value: _notificationsEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    _notificationsEnabled = value;
-                  });
-                },
-                activeColor: primaryColor,
-                activeTrackColor: primaryColor.withOpacity(0.5),
-              ),
-            ),
-            const _SettingsTile(
-              title: 'Cambiar Contraseña',
-              subtitle: 'Actualiza tu contraseña de seguridad',
-              trailing: Icon(Icons.chevron_right, color: Colors.grey),
-            ),
-            const _SettingsTile(
-              title: 'Acerca de',
-              subtitle: 'Versión de la app e información',
-              trailing: Icon(Icons.chevron_right, color: Colors.grey),
-            ),
-            const SizedBox(height: 30),
+            // // --- SECCIÓN: CONFIGURACIÓN ---
+            // const _SectionTitle(title: 'Configuración'),
+            // const SizedBox(height: 8),
+            // _SettingsTile(
+            //   title: 'Notificaciones Push',
+            //   subtitle: 'Recibir alertas y actualizaciones',
+            //   trailing: Switch(
+            //     value: _notificationsEnabled,
+            //     onChanged: (value) {
+            //       setState(() {
+            //         _notificationsEnabled = value;
+            //       });
+            //     },
+            //     activeColor: primaryColor,
+            //     activeTrackColor: primaryColor.withOpacity(0.5),
+            //   ),
+            // ),
+            // const _SettingsTile(
+            //   title: 'Cambiar Contraseña',
+            //   subtitle: 'Actualiza tu contraseña de seguridad',
+            //   trailing: Icon(Icons.chevron_right, color: Colors.grey),
+            // ),
+            // const _SettingsTile(
+            //   title: 'Acerca de',
+            //   subtitle: 'Versión de la app e información',
+            //   trailing: Icon(Icons.chevron_right, color: Colors.grey),
+            // ),
+            // const SizedBox(height: 30),
 
             // --- SECCIÓN: CUENTA ---
             const _SectionTitle(title: 'Cuenta'),
@@ -161,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               textColor: accentColor, // Color rojo para acción destructiva
               onTap: () => showSosConfirmationDeleteAccountDialog(context),
             ),
-             const SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -187,20 +180,14 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-// Widget reutilizable para los campos de texto
-class _CustomTextField extends StatelessWidget {
-  final String labelText;
-  final String? hintText;
-  final String? initialValue;
-  final bool enabled;
-  final TextInputType keyboardType;
+// Widget reutilizable para mostrar información estática
+class _InfoTile extends StatelessWidget {
+  final String label;
+  final String value;
 
-  const _CustomTextField({
-    required this.labelText,
-    this.hintText,
-    this.initialValue,
-    this.enabled = true,
-    this.keyboardType = TextInputType.text,
+  const _InfoTile({
+    required this.label,
+    required this.value,
   });
 
   @override
@@ -208,23 +195,18 @@ class _CustomTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(labelText, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         const SizedBox(height: 8),
-        TextFormField(
-          initialValue: initialValue,
-          enabled: enabled,
-          keyboardType: keyboardType,
-          style: TextStyle(color: enabled ? Colors.white : Colors.grey[500]),
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[600]),
-            filled: true,
-            fillColor: cardColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            value,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
       ],

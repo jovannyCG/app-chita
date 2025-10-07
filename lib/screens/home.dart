@@ -1,9 +1,65 @@
+import 'dart:async';
+
 import 'package:chita_app/screens/share_location.dart';
 import 'package:flutter/material.dart';
 import '../main.dart'; // Importamos para usar los colores
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isCountingDown = false;
+  int _countdownValue = 3;
+  late Timer _timer;
+  double _waveAnimation = 0.0;
+  late Timer _waveTimer;
+
+  void _startCountdown() {
+    setState(() {
+      _isCountingDown = true;
+      _countdownValue = 3;
+      _waveAnimation = 0.0;
+    });
+
+    // Timer para la cuenta regresiva
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_countdownValue > 1) {
+          _countdownValue--;
+        } else {
+          _timer.cancel();
+          _waveTimer.cancel();
+          _isCountingDown = false;
+          _showSosConfirmationDialog(context);
+        }
+      });
+    });
+
+    // Timer para la animación de ondas
+    _waveTimer = Timer.periodic(const Duration(milliseconds: 600), (timer) {
+      setState(() {
+        _waveAnimation = _waveAnimation == 0.0 ? 1.0 : 0.0;
+      });
+    });
+  }
+
+  void _cancelCountdown() {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+    if (_waveTimer.isActive) {
+      _waveTimer.cancel();
+    }
+    setState(() {
+      _isCountingDown = false;
+      _countdownValue = 3;
+      _waveAnimation = 0.0;
+    });
+  }
 
   void _showSosConfirmationDialog(BuildContext context) {
     showDialog(
@@ -61,6 +117,17 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+    if (_waveTimer.isActive) {
+      _waveTimer.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -86,73 +153,146 @@ class HomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               Center(
-                child: GestureDetector(
-                  onTap: () => _showSosConfirmationDialog(context),
-                  child: Container(
-                    width: 180,
-                    height: 180,
-                    decoration: const BoxDecoration(
-                      color: accentColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'SOS',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Efecto de ondas
+                    if (_isCountingDown)
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 600),
+                        width: 180 + (_waveAnimation * 40),
+                        height: 180 + (_waveAnimation * 40),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.3 - (_waveAnimation * 0.2)),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.red.withOpacity(0.5 - (_waveAnimation * 0.3)),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    if (_isCountingDown)
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 600),
+                        width: 180 + (_waveAnimation * 20),
+                        height: 180 + (_waveAnimation * 20),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.2 - (_waveAnimation * 0.15)),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.red.withOpacity(0.4 - (_waveAnimation * 0.25)),
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                    // Botón principal
+                    GestureDetector(
+                      onTapDown: (_) => _startCountdown(),
+                      onTapUp: (_) => _cancelCountdown(),
+                      onTapCancel: _cancelCountdown,
+                      child: Container(
+                        width: 180,
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: _isCountingDown ? Colors.red : accentColor,
+                          shape: BoxShape.circle,
+                          boxShadow: _isCountingDown
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.red.withOpacity(0.6),
+                                    blurRadius: 15,
+                                    spreadRadius: 5,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Center(
+                          child: _isCountingDown
+                              ? Text(
+                                  '$_countdownValue',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 64,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : const Text(
+                                  'SOS',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15),
+              Center(
+                child: Text(
+                  _isCountingDown 
+                    ? 'Mantén presionado... $_countdownValue' 
+                    : 'Mantén presionado 3 segundos',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+              const Spacer(),
+              // --- CARD HORIZONTAL COMPARTIR UBICACIÓN ---
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ShareLocationScreen()),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 80, // Altura ajustada para formato horizontal
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.share_location, color: primaryColor, size: 30),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Compartir Ubicación',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              'Comparte tu ubicación',
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey[400],
+                        size: 16,
+                      ),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: 15),
-              const Center(
-                child: Text(
-                  'Toca para alerta de emergencia',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-              const Spacer(),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-                childAspectRatio: 1.3,
-                children: [
-                  const _FeatureCard(
-                    icon: Icons.route,
-                    title: 'Mis Rutas',
-                    subtitle: 'Ver rutas guardadas',
-                  ),
-                  const _FeatureCard(
-                    icon: Icons.people_outline,
-                    title: 'Contactos',
-                    subtitle: 'Contactos de emergencia',
-                  ),
-                  const _FeatureCard(
-                    icon: Icons.notifications_none,
-                    title: 'Alertas',
-                    subtitle: 'Actividad reciente',
-                  ),
-                  // --- MODIFICACIÓN AQUÍ ---
-                  _FeatureCard(
-                    icon: Icons.share_location,
-                    title: 'Compartir Ubicación',
-                    subtitle: '',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ShareLocationScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
               const Spacer(),
             ],
           ),
@@ -166,18 +306,18 @@ class _FeatureCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final VoidCallback? onTap; // <-- AÑADE onTap
+  final VoidCallback? onTap;
 
   const _FeatureCard({
     required this.icon,
     required this.title,
     required this.subtitle,
-    this.onTap, // <-- AÑADE onTap
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector( // <-- ENVUELVE CON GestureDetector
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),

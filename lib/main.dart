@@ -95,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.route),
-            label: 'Rutas',
+            label: 'Espacios para correr',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),

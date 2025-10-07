@@ -18,7 +18,7 @@ class RoutesScreen extends StatelessWidget {
                  Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Rutas',
+                    'Espacios para correr',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
